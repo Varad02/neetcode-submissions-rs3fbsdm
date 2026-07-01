@@ -1,0 +1,43 @@
+class Solution {
+public:
+    int maxAreaOfIsland(vector<vector<int>>& grid) {
+        int area = 0;
+        int rows = grid.size();
+        int cols = grid[0].size();
+
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                if (grid[r][c] == 1) {
+                    area = max(area, bfs(grid, r, c, rows, cols));
+                }
+            }
+        }
+
+        return area;
+    }
+
+private:
+    int bfs(vector<vector<int>>& grid, int r, int c, int rows, int cols) {
+        queue<pair<int, int>> q;
+        q.push({r, c});
+        grid[r][c] = 0;
+        int area = 1;
+        vector<pair<int, int>> directions = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+
+        while (!q.empty()) {
+            auto [row, col] = q.front();
+            q.pop();
+
+            for (auto [dr, dc] : directions) {
+                int nr = row + dr;
+                int nc = col + dc;
+                if (nr >= 0 && nr < rows && nc >= 0 && nc < cols && grid[nr][nc] == 1) {
+                    q.push({nr, nc});
+                    grid[nr][nc] = 0;
+                    area++;
+                }
+            }
+        }
+        return area;
+    }
+};
